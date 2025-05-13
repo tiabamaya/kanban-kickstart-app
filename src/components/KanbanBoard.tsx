@@ -94,8 +94,8 @@ const KanbanBoard = () => {
     setDraggedTaskId(null);
     
     // Remove highlight from the column
-    const columns = document.querySelectorAll('[data-column-id]');
-    columns.forEach(col => col.classList.remove('bg-accent'));
+    const columnElements = document.querySelectorAll('[data-column-id]');
+    columnElements.forEach(col => col.classList.remove('bg-accent'));
   };
 
   const handleAddTask = (columnId: string, taskTitle: string) => {
