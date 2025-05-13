@@ -38,51 +38,49 @@ const TaskStatistics = ({ data }: TaskStatisticsProps) => {
   }
   
   return (
-    <Card>
+    <Card className="w-full">
       <CardHeader className="pb-2">
         <CardTitle className="text-base">Tasks by Status</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[200px]">
+        <div className="h-[200px] w-full">
           <ChartContainer config={config}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={chartData}
-                margin={{ top: 10, right: 10, left: 0, bottom: 20 }}
-              >
-                <XAxis 
-                  dataKey="name" 
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <YAxis 
-                  allowDecimals={false}
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(value) => `${value}`}
-                />
-                <Tooltip 
-                  content={({ active, payload }) => {
-                    if (active && payload && payload.length) {
-                      return (
-                        <ChartTooltipContent>
-                          <div className="flex flex-col">
-                            <span className="font-medium">{payload[0].payload.name}</span>
-                            <span className="text-sm text-muted-foreground">
-                              {payload[0].value} tasks
-                            </span>
-                          </div>
-                        </ChartTooltipContent>
-                      );
-                    }
-                    return null;
-                  }}
-                />
-                <Bar dataKey="value" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            <BarChart
+              data={chartData}
+              margin={{ top: 10, right: 10, left: 0, bottom: 20 }}
+            >
+              <XAxis 
+                dataKey="name" 
+                tick={{ fontSize: 12 }}
+                tickLine={false}
+                axisLine={false}
+              />
+              <YAxis 
+                allowDecimals={false}
+                tick={{ fontSize: 12 }}
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={(value) => `${value}`}
+              />
+              <Tooltip 
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <ChartTooltipContent>
+                        <div className="flex flex-col">
+                          <span className="font-medium">{payload[0].payload.name}</span>
+                          <span className="text-sm text-muted-foreground">
+                            {payload[0].value} tasks
+                          </span>
+                        </div>
+                      </ChartTooltipContent>
+                    );
+                  }
+                  return null;
+                }}
+              />
+              <Bar dataKey="value" radius={[4, 4, 0, 0]} />
+            </BarChart>
           </ChartContainer>
         </div>
       </CardContent>

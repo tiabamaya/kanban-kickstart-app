@@ -28,7 +28,7 @@ const PriorityDistribution = ({ data }: PriorityDistributionProps) => {
   
   if (chartData.length === 0) {
     return (
-      <Card>
+      <Card className="w-full">
         <CardHeader className="pb-2">
           <CardTitle className="text-base">Tasks by Priority</CardTitle>
         </CardHeader>
@@ -40,51 +40,49 @@ const PriorityDistribution = ({ data }: PriorityDistributionProps) => {
   }
   
   return (
-    <Card>
+    <Card className="w-full">
       <CardHeader className="pb-2">
         <CardTitle className="text-base">Tasks by Priority</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[200px]">
+        <div className="h-[200px] w-full">
           <ChartContainer config={config}>
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={chartData}
-                  nameKey="name"
-                  dataKey="count"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={75}
-                  fill="#8884d8"
-                  label={({ name, percent }) => 
-                    `${name} ${(percent * 100).toFixed(0)}%`
+            <PieChart>
+              <Pie
+                data={chartData}
+                nameKey="name"
+                dataKey="count"
+                cx="50%"
+                cy="50%"
+                outerRadius={75}
+                fill="#8884d8"
+                label={({ name, percent }) => 
+                  `${name} ${(percent * 100).toFixed(0)}%`
+                }
+                labelLine={false}
+              >
+                {chartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[entry.name as keyof typeof COLORS] || "#8E9196"} />
+                ))}
+              </Pie>
+              <Tooltip
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <ChartTooltipContent>
+                        <div className="flex flex-col">
+                          <span className="font-medium">{payload[0].name}</span>
+                          <span className="text-sm text-muted-foreground">
+                            {payload[0].value} tasks
+                          </span>
+                        </div>
+                      </ChartTooltipContent>
+                    );
                   }
-                  labelLine={false}
-                >
-                  {chartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[entry.name as keyof typeof COLORS] || "#8E9196"} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  content={({ active, payload }) => {
-                    if (active && payload && payload.length) {
-                      return (
-                        <ChartTooltipContent>
-                          <div className="flex flex-col">
-                            <span className="font-medium">{payload[0].name}</span>
-                            <span className="text-sm text-muted-foreground">
-                              {payload[0].value} tasks
-                            </span>
-                          </div>
-                        </ChartTooltipContent>
-                      );
-                    }
-                    return null;
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+                  return null;
+                }}
+              />
+            </PieChart>
           </ChartContainer>
         </div>
       </CardContent>
