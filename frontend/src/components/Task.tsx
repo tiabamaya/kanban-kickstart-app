@@ -18,7 +18,6 @@ export interface TaskProps {
   onDelete?: (taskId: string) => void;
 }
 
-
 const getPriorityColor = (priority?: Priority) => {
   switch (priority) {
     case "critical":

@@ -22,22 +22,19 @@ const KanbanBoard = () => {
 
  const fetchColumns = async () => {
   try {
-    const response = await axios.get<ColumnData[]>("/api/columns/");
+    const response = await axios.get<ColumnData[]>("/api/columns/", {
+       headers: { 'Cache-Control': 'no-cache' }
+    });
     setColumns(response.data);
   } catch (err) {
     console.error(err);
   }
 };
 
-const handleRefresh = async () => {
-  // Refresh logic (e.g., fetch new data or refresh tasks)
-  await fetchColumns(); // Fetch columns again or any other logic
-};
-
-
   useEffect(() => {
     fetchColumns();
   }, []);
+
 
   const handleAddTask = async (columnId: string, taskTitle: string, priority?: Priority) => {
     try {
@@ -83,7 +80,7 @@ const handleUpdateTask = async (updatedTask: TaskProps) => {
       priority: updatedTask.priority,
       column: updatedTask.column
     });
-    fetchColumns();
+     fetchColumns();
     toast({ title: "Task updated successfully" });
   } catch (error) {
     console.error(error);
@@ -132,17 +129,25 @@ const getPriorityStats = () => {
     </div>
       <div className="flex gap-4 min-h-[calc(100vh-20rem)]">
         {columns.map((column) => (
-          <Column
-            key={column.id}
-            id={column.id}
-            title={column.title}
-            tasks={column.tasks}
-            onAddTask={handleAddTask}
-            onMoveTask={handleMoveTask}
-            onPreviewTask={handlePreviewTask}
-            onDeleteTask={handleDeleteTask}
-          />
-        ))}
+  <Column
+    key={column.id}
+    id={column.id}
+    title={column.title}
+    tasks={column.tasks.map((task: any) => ({
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      dueDate: task.due_date ? new Date(task.due_date) : undefined,  // ✅ map here
+      priority: task.priority,
+      column: task.column
+    }))}
+    onAddTask={handleAddTask}
+    onMoveTask={handleMoveTask}
+    onPreviewTask={handlePreviewTask}
+    onDeleteTask={handleDeleteTask}
+  />
+))}
+
       </div>
 
       <TaskModal
@@ -150,7 +155,7 @@ const getPriorityStats = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleUpdateTask}
-        onRefresh={handleRefresh} // Add this line
+        onRefresh={fetchColumns} // Add this line
       />
     </div>
   );

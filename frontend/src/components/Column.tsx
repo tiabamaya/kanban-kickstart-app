@@ -80,16 +80,18 @@ const Column = ({ id, title, tasks, onAddTask, onMoveTask, onPreviewTask, onDele
       </div>
 
       <div>
-        {tasks.map((task) => (
-          <div key={task.id} draggable onDragStart={(e) => handleDragStart(e, task.id)}>
-            <Task
-              {...task}
-              onPreview={() => handlePreviewTask(task.id)}
-              onDelete={() => handleDeleteTask(task.id)}
-            />
-          </div>
-        ))}
-      </div>
+        {tasks.map((task)=> {
+            return (
+              <div key={task.id} draggable onDragStart={(e) => console.log("Drag", task.id)}>
+                <Task
+                  {...task}
+                  onPreview={() => handlePreviewTask(task.id)}
+                  onDelete={() => handleDeleteTask(task.id)}
+                />
+              </div>
+            );
+          })}
+        </div>
     </div>
   );
 };

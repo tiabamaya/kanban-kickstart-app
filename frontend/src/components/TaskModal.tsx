@@ -45,8 +45,6 @@ const handleSave = async () => {
   }
 };
 
-
-
   const handleChange = (field: keyof TaskProps, value: any) => {
     setEditedTask((prev) => prev ? { ...prev, [field]: value } : null);
   };

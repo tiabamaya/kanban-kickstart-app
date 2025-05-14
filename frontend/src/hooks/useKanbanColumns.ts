@@ -18,7 +18,9 @@ export const useKanbanColumns = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get<ColumnData[]>("http://localhost:8000/api/columns/");
+      const response = await axios.get<ColumnData[]>("http://localhost:8000/api/columns/", {
+       headers: { 'Cache-Control': 'no-cache' }
+    });
       const mappedData = response.data.map((col: any) => ({
         id: col.id,
         title: col.title,
