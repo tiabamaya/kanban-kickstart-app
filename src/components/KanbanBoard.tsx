@@ -259,29 +259,35 @@ const KanbanBoard = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 p-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <TaskStatistics data={getColumnStats()} />
-        <PriorityDistribution data={getPriorityStats()} />
-      </div>
-      
-      <div 
-        className="flex gap-4 p-4 overflow-x-auto min-h-[calc(100vh-20rem)]"
-        onDragStart={handleDragStart}
-        onDrop={handleDrop}
-        onDragOver={(e) => e.preventDefault()} // Needed to allow dropping
-      >
+    <div className="flex flex-col gap-6 px-4 w-full">
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <TaskStatistics data={getColumnStats()} />
+    <PriorityDistribution data={getPriorityStats()} />
+  </div>
+
+  {/* Wrap this in a centered container */}
+  <div className="w-full flex justify-center">
+    <div
+      className="w-fit"
+      onDragStart={handleDragStart}
+      onDrop={handleDrop}
+      onDragOver={(e) => e.preventDefault()}
+    >
+      <div className="flex gap-4 min-h-[calc(100vh-20rem)]">
         {columns.map((column) => (
-          <Column 
-            key={column.id} 
-            id={column.id} 
-            title={column.title} 
-            tasks={column.tasks} 
+          <Column
+            key={column.id}
+            id={column.id}
+            title={column.title}
+            tasks={column.tasks}
             onAddTask={handleAddTask}
           />
         ))}
       </div>
     </div>
+  </div>
+</div>
+
   );
 };
 
