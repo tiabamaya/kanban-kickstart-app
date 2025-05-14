@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Grab, Calendar, Clock, AlertTriangle, Flag, Eye, Pencil, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
 
 export type Priority = "low" | "medium" | "critical";
 
@@ -16,6 +17,7 @@ export interface TaskProps {
   column: string;
   onPreview?: (taskId: string) => void;
   onDelete?: (taskId: string) => void;
+  onSuggestNextTask?: (taskId: string, title: string, description?: string) => void;
 }
 
 const getPriorityColor = (priority?: Priority) => {
@@ -38,7 +40,7 @@ const priorityColors: Record<string, string> = {
   none: "#9ca3af",      // Tailwind gray-400
 };
 
-const Task = ({ id, title, description, dueDate, priority, onPreview, onDelete  }: TaskProps) => {
+const Task = ({ id, title, description, dueDate, priority, onPreview, onDelete, onSuggestNextTask  }: TaskProps) => {
   const isOverdue = dueDate && new Date() > dueDate;
   
 return (
@@ -96,6 +98,9 @@ return (
           <Trash2 size={16} />
         </button>
       </div>
+
+       {/* ✅ AI Suggest Next Task Button */}
+      <Button size="sm" onClick={() => onSuggestNextTask?.(id, title, description)}>Suggest Next Task</Button>
     </div>
   );
 };

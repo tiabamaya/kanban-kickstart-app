@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Task, { TaskProps, Priority } from "./Task";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { callOpenAI } from "@/utils/openaiHelper";
 
 interface ColumnProps {
   id: string;
@@ -19,9 +20,7 @@ const Column = ({ id, title, tasks, onAddTask, onMoveTask, onPreviewTask, onDele
 
   const handleAddTask = () => {
     if (newTaskTitle.trim() === "") return;
-
     onAddTask(id, newTaskTitle, priority);
-
     setNewTaskTitle("");
     setPriority("low");
   };
@@ -48,6 +47,22 @@ const Column = ({ id, title, tasks, onAddTask, onMoveTask, onPreviewTask, onDele
 
   const handleDeleteTask = (taskId: string) => {
     onDeleteTask(taskId);
+  };
+
+const handleSuggestNextTask = async (taskId: string, title: string, description?: string) => {
+const prompt = `Given this task: "Create login page", suggest the next logical follow-up task in 5 words max.`;
+
+
+    const suggestion = await callOpenAI(prompt);
+
+    if (suggestion) {
+      console.log(`AI Suggests: ${suggestion}`);
+      if (confirm(`AI Suggests: "${suggestion}". Add to column?`)) {
+        onAddTask(id, suggestion, "low");
+      }
+    } else {
+      alert("AI could not suggest a next task. Please try again.");
+    }
   };
 
   return (
@@ -82,11 +97,12 @@ const Column = ({ id, title, tasks, onAddTask, onMoveTask, onPreviewTask, onDele
       <div>
         {tasks.map((task)=> {
             return (
-              <div key={task.id} draggable onDragStart={(e) => console.log("Drag", task.id)}>
+              <div key={task.id} draggable onDragStart={(e) => handleDragStart(e, task.id)}>
                 <Task
                   {...task}
                   onPreview={() => handlePreviewTask(task.id)}
                   onDelete={() => handleDeleteTask(task.id)}
+                  onSuggestNextTask={handleSuggestNextTask}
                 />
               </div>
             );
