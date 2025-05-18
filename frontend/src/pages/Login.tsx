@@ -9,16 +9,15 @@ export const Login = () => {
   const navigate = useNavigate();
   const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
 
-  if (isAuthenticated) {
-    return <Navigate to="/" />;
-  }
+if (isAuthenticated) {
+  return <Navigate to="/kanban" />;
 
-  const handleGithubLogin = () => {
-    // In a real application, this would integrate with GitHub OAuth
-    localStorage.setItem("isAuthenticated", "true");
-    localStorage.setItem("user", JSON.stringify({ name: "GitHub User", email: "github@example.com" }));
-    navigate("/");
-  };
+}
+
+
+const handleGithubLogin = () => {
+  window.location.href = "http://127.0.0.1:8000/accounts/github/login/";
+};
 
   const handleGoogleLogin = () => {
     // In a real application, this would integrate with Google OAuth

@@ -6,7 +6,9 @@ import TaskModal from "./TaskModal";
 import { toast } from "@/hooks/use-toast";
 import TaskStatistics from "./TaskStatistics";
 import PriorityDistribution from "./PriorityDistribution";
-
+import { Button } from "@/components/ui/button";
+import { getPrioritySuggestion } from "@/helpers/getPrioritySuggestion";
+import { useNavigate } from "react-router-dom";
 
 interface ColumnData {
   id: string;
@@ -19,6 +21,8 @@ const KanbanBoard = () => {
   const [columns, setColumns] = useState<ColumnData[]>([]);
   const [selectedTask, setSelectedTask] = useState<TaskProps | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<{ username: string } | null>(null);
+  const navigate = useNavigate();
 
  const fetchColumns = async () => {
   try {
@@ -32,24 +36,44 @@ const KanbanBoard = () => {
 };
 
   useEffect(() => {
-    fetchColumns();
+     fetchColumns();
+    fetchCurrentUser();
   }, []);
 
+const handleLogout = async () => {
+  try {
+    await axios.post("/auth/logout/", {}, { withCredentials: true });
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("user");
+    navigate("/login");  // ✅ Correct usage of React Router's navigate
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-  const handleAddTask = async (columnId: string, taskTitle: string, priority?: Priority) => {
+
+  
+
+const handleAddTask = async (columnId: string, taskTitle: string) => {
     try {
+      const aiPriority = await getPrioritySuggestion(taskTitle);
+      console.log(`AI Suggested Priority: ${aiPriority}`);
+
       await axios.post("/api/tasks/", {
         column: columnId,
         title: taskTitle,
         description: "",
-        priority: priority || "none"
+        priority: aiPriority,
       });
+
       toast({ title: "Task Created", description: `${taskTitle} added.` });
       fetchColumns();
     } catch (err) {
       console.error(err);
     }
   };
+
+
 
   const handleMoveTask = async (taskId: string, targetColumnId: string) => {
     try {
@@ -88,13 +112,20 @@ const handleUpdateTask = async (updatedTask: TaskProps) => {
   }
 };
 
-
-
   const handlePreviewTask = (taskId: string) => {
     const task = columns.flatMap(col => col.tasks).find(t => t.id === taskId);
     if (task) {
       setSelectedTask(task);
       setIsModalOpen(true);
+    }
+  };
+
+  const fetchCurrentUser = async () => {
+    try {
+      const response = await axios.get<{ username: string }>("/auth/user/", { withCredentials: true });
+      setCurrentUser(response.data);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -112,6 +143,7 @@ const getPriorityStats = () => {
         task.priority ? counts[task.priority]++ : counts.none++
       )
     );
+
     return [
       { name: "Critical", count: counts.critical },
       { name: "Medium", count: counts.medium },
@@ -122,7 +154,11 @@ const getPriorityStats = () => {
   
 
   return (
+
     <div className="flex flex-col gap-6 px-4 w-full">
+      <div className="flex justify-between items-center py-4">
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <TaskStatistics data={getColumnStats()} />
       <PriorityDistribution data={getPriorityStats()} />
@@ -147,6 +183,20 @@ const getPriorityStats = () => {
     onDeleteTask={handleDeleteTask}
   />
 ))}
+
+<Button
+  onClick={async () => {
+    try {
+      const suggestion = await getPrioritySuggestion("Fix critical bug");
+      console.log("AI Suggested Priority:", suggestion);
+      toast({ title: `AI Suggested Priority: ${suggestion}` });
+    } catch (error) {
+      console.error("AI Suggestion Error:", error);
+    }
+  }}
+>
+  Test AI Suggestion
+</Button>
 
       </div>
 

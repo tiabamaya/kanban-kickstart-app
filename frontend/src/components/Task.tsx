@@ -42,12 +42,17 @@ const priorityColors: Record<string, string> = {
 
 const Task = ({ id, title, description, dueDate, priority, onPreview, onDelete, onSuggestNextTask  }: TaskProps) => {
   const isOverdue = dueDate && new Date() > dueDate;
+
+  const handleDragStart = (e: React.DragEvent) => {
+    e.dataTransfer.setData("text/plain", id);
+  };
   
 return (
     <div
       className="flex flex-col gap-2 p-4 bg-white shadow-sm rounded-lg border hover:shadow-md relative"
       draggable
       data-task-id={id}
+      onDragStart={handleDragStart}
     >
       {/* Header: Drag Icon + Title + Priority */}
       <div className="flex justify-between items-center">
