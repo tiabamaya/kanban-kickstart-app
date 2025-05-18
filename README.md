@@ -40,7 +40,7 @@ kanban-kickstart-app/
 
 ---
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 - Python 3.13+
 - Django
