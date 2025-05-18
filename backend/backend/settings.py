@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-k62^kfb!+w!17et*k^d$&^va7=%+y+*l8tb!#a=!!x8j$e&_2)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['kanban-kickstart-app.onrender.com', 'localhost', '127.0.0.1']
+
 
 
 # Application definition
@@ -118,16 +120,10 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mydatabase',  # Your database name
-        'USER': 'myuser',  # Your PostgreSQL user
-        'PASSWORD': 'mypassword',  # Your PostgreSQL password
-        'HOST': 'localhost',  # Keep this if PostgreSQL is running locally
-        'PORT': '5432',  # Default PostgreSQL port
-        'CONN_MAX_AGE': 6000
-    }
+
+'default': dj_database_url.config(default='postgresql://kanban_db_g4sg_user:CG9xhuAGve7PKFUjYYLxzmFyoq1fQgnf@dpg-d0l06td6ubrc73bm0vig-a/kanban_db_g4sg', conn_max_age=600)
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
