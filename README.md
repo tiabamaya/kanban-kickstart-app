@@ -68,15 +68,6 @@ kanban-kickstart-app/
    ```bash
   gunicorn backend.wsgi
 
-**Environment Variables (/backend/.env):**
-    DATABASE_URL=postgresql://kanban_db_g4sg_user:CG9xhuAGve7PKFUjYYLxzmFyoq1fQgnf@dpg-d0l06td6ubrc73bm0vig-a/kanban_db_g4sg
-    GEMINI_API_KEY=AIzaSyBK4SLyPLlRj-iKodvzijbIu6cZpwcNuEA
-    SOCIAL_AUTH_GITHUB_KEY=Ov23liJtyRNPlrIZuD3z
-    SOCIAL_AUTH_GITHUB_SECRET=e501035f5a2907e761dced4489bf45f44e3edc00
-    SECRET_KEY=django-insecure-k62^kfb!+w!17et*k^d$&^va7=%+y+*l8tb!#a=!!x8j$e&_2
-    DJANGO_ALLOWED_HOSTS=kanban-kickstart-app.onrender.com,localhost,127.0.0.1
-    DEBUG=False
-
 ### Frontend (React)
 
 **Render Static Site**
